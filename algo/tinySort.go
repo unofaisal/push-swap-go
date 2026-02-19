@@ -19,5 +19,4 @@ func tinySort(l *List) {
 	if l.Head.N > l.Head.Next.N {
 		sa(l)
 	}
-	printList(l)
 }

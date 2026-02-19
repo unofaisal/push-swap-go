@@ -13,13 +13,19 @@ func pb(a, b *List) {
 
 	a0Data := curra.N
 	b0NNode := &Node{N:a0Data, Next:currb}
+	
 	b.Head = b0NNode
 	if currb == nil {
+		a.Head = curra.Next
 		b.Tail = b0NNode
+		b.Head.Next = nil
+		b.Head.Prev = nil
+	} else {
+		a.Head = curra.Next
+		currb.Prev = b.Head
+		b.Head.Next = currb
+		b.Head.Prev = nil
 	}
-
-	a.Head = curra.Next
-
 }
 
 func pa(a, b *List) {
@@ -27,12 +33,20 @@ func pa(a, b *List) {
 	currb := b.Head
 
 	b0Data := currb.N
-	a0NNode := &Node{N:b0Data, Next:currb}
+	a0NNode := &Node{N:b0Data, Next:curra}
+	
 	a.Head = a0NNode
 	if curra == nil {
+		b.Head = currb.Next
 		a.Tail = a0NNode
+		a.Head.Next = nil
+		a.Head.Prev = nil
+	} else {
+		b.Head = currb.Next
+		curra.Prev = a.Head
+		a.Head.Next = curra
+		a.Head.Prev = nil
 	}
-	b.Head = currb.Next
 }
 
 func sa(a *List) {
@@ -66,17 +80,26 @@ func ss(a, b *List) {
 
 func ra(a *List) {
 	curr := a.Head
-	a.Tail.Next = curr
-	a.Tail = curr
+	currT := a.Tail
+	a0Data := curr.N
 	a.Head = curr.Next
-	curr.Next = nil
+	
+	aTNode := &Node{N: a0Data, Next: nil, Prev: currT}
+	a.Tail.Next = aTNode
+	a.Tail = aTNode
+	a.Tail.Next = nil
+	
 }
 
 func rb(b *List) {
 	curr := b.Head
-	b.Tail.Next = curr
-	b.Tail = curr
+	currT := b.Tail
+	b0Data := curr.N
 	b.Head = curr.Next
+	
+	bTNode := &Node{N: b0Data, Next: nil, Prev: currT}
+	b.Tail.Next = bTNode
+	b.Tail = bTNode
 	b.Tail.Next = nil
 }
 
@@ -88,19 +111,40 @@ func rr(a, b *List) {
 func rra(a *List) {
 	currH := a.Head
 	currT := a.Tail
+	// aTData := currT.N
+	// aTNNode := &Node{N:aTData, Next:currH}
+	// a.Head = aTNNode
+	// fmt.Println("hellloooo: ", currT.Prev)
+	// fmt.Println("hellloooo: ", currT)
+	// a.Tail = currT.Prev
+	// a.Tail.Next = nil
+
 	a.Tail = currT.Prev
 	a.Tail.Next = nil
-	currT.Next = currH
+	a.Head.Prev = currT
 	a.Head = currT
+	a.Head.Next = currH
+	a.Head.Prev = nil
+	
 }
 
 func rrb(b *List) {
 	currH := b.Head
 	currT := b.Tail
+	// bTData := currT.N
+	// bTNNode := &Node{N:bTData, Next:currH}
+	
+	// // fmt.Println("hellloooo: ", currT.Prev)
+	// b.Tail = currT.Prev
+	// b.Tail.Next = nil
+	// b.Head = bTNNode
+
 	b.Tail = currT.Prev
 	b.Tail.Next = nil
-	currT.Next = currH
+	b.Head.Prev = currT
 	b.Head = currT
+	b.Head.Next = currH
+	b.Head.Prev = nil
 }
 
 func rrr(a, b *List) {
@@ -111,7 +155,7 @@ func rrr(a, b *List) {
 func printList(l *List) {
 	curr := l.Head
 	for curr != nil {
-		fmt.Printf("%v ->", curr.N)
+		fmt.Printf("%v [%v] %v ->", curr.N, curr.index, curr.above_median)
 		curr = curr.Next
 	}
 }

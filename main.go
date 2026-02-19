@@ -3,192 +3,223 @@ package main
 import (	
 	"os"
 	"push/algo"
+	"fmt"
+	"strings"
+	"strconv"
+	"errors"
 
 )
-// type Node struct {
-// 	N int
-// 	Next *Node
-// 	Prev *Node
-// }
+type Node struct {
+	N int
+	Next *Node
+	Prev *Node
+}
 
-// type List struct {
-// 	Head *Node
-// 	Tail *Node
-// }
+type List struct {
+	Head *Node
+	Tail *Node
+}
 
 func main() {
 	args := os.Args[1:]
 
 	algo.Push_swap(args)
 	// a, _ := parseArg(args)
-	// // b := &List{}
-	// // fmt.Print(IsSorted(a))
-	// rra(a)
+	// b := &List{}
+	// fmt.Println("\naaaaaaaaaa1")
 	// printList(a)
 	// fmt.Println()
+	// pb(a, b)
+	// pb(a, b)
+	// pb(a, b)
+	// fmt.Println("\naaaaaaaaaa2")
+	// printList(a)
+	// fmt.Println("\nbbbbbbbb1")
+	// printList(b)
+	// pa(a, b)
+	// pa(a, b)
+	// pa(a, b)
+	// fmt.Println("\naaaaaaaaaa3")
+	// printList(a)
+	// fmt.Println("\nbbbbb2")
 	// printList(b)
 	
 }
 
-// func pb(a, b *List) {
-// 	curra := a.Head
-// 	currb := b.Head
+func pb(a, b *List) {
+	curra := a.Head
+	currb := b.Head
 
-// 	a0Data := curra.N
-// 	b0NNode := &Node{N:a0Data, Next:currb}
-// 	b.Head = b0NNode
-// 	if currb == nil {
-// 		b.Tail = b0NNode
-// 	}
-
-// 	a.Head = curra.Next
-
-// }
-
-// func pa(a, b *List) {
-// 	curra := a.Head
-// 	currb := b.Head
-
-// 	b0Data := currb.N
-// 	a0NNode := &Node{N:b0Data, Next:currb}
-// 	a.Head = a0NNode
-// 	if curra == nil {
-// 		a.Tail = a0NNode
-// 	}
-// 	b.Head = currb.Next
-// }
-
-// func sa(a *List) {
-// 	curr := a.Head
-// 	next := curr.Next
-// 	if curr == nil || curr.Next == nil {
-// 		return
-// 	}
-// 	curr.Next = next.Next
-// 	next.Next = curr
-// 	a.Head = next
+	a0Data := curra.N
+	b0NNode := &Node{N:a0Data, Next:currb}
 	
-// }
+	b.Head = b0NNode
+	if currb == nil {
+		a.Head = curra.Next
+		b.Tail = b0NNode
+		b.Head.Next = nil
+		b.Head.Prev = nil
+	} else {
+		a.Head = curra.Next
+		currb.Prev = b.Head
+		b.Head.Next = currb
+		b.Head.Prev = nil
+	}
+}
 
-// func sb(b *List) {
-// 	curr := b.Head
-// 	next := curr.Next
-// 	if curr == nil || curr.Next == nil {
-// 		return
-// 	}
-// 	curr.Next = next.Next
-// 	next.Next = curr
-// 	b.Head = next
+func pa(a, b *List) {
+	curra := a.Head
+	currb := b.Head
+
+	b0Data := currb.N
+	a0NNode := &Node{N:b0Data, Next:curra}
 	
-// }
+	a.Head = a0NNode
+	if curra == nil {
+		b.Head = currb.Next
+		a.Tail = a0NNode
+		a.Head.Next = nil
+		a.Head.Prev = nil
+	} else {
+		b.Head = currb.Next
+		curra.Prev = a.Head
+		a.Head.Next = curra
+		a.Head.Prev = nil
+	}
+}
 
-// func ss(a, b *List) {
-// 	sa(a)
-// 	sb(b)
-// }
+func sa(a *List) {
+	curr := a.Head
+	next := curr.Next
+	if curr == nil || curr.Next == nil {
+		return
+	}
+	curr.Next = next.Next
+	next.Next = curr
+	a.Head = next
+	
+}
 
-// func ra(a *List) {
-// 	curr := a.Head
-// 	a.Tail.Next = curr
-// 	a.Tail = curr
-// 	a.Head = curr.Next
-// 	curr.Next = nil
-// }
+func sb(b *List) {
+	curr := b.Head
+	next := curr.Next
+	if curr == nil || curr.Next == nil {
+		return
+	}
+	curr.Next = next.Next
+	next.Next = curr
+	b.Head = next
+	
+}
 
-// func rb(b *List) {
-// 	curr := b.Head
-// 	b.Tail.Next = curr
-// 	b.Tail = curr
-// 	b.Head = curr.Next
-// 	b.Tail.Next = nil
-// }
+func ss(a, b *List) {
+	sa(a)
+	sb(b)
+}
 
-// func rr(a, b *List) {
-// 	ra(a)
-// 	rb(b)
-// }
+func ra(a *List) {
+	curr := a.Head
+	a.Tail.Next = curr
+	a.Tail = curr
+	a.Head = curr.Next
+	curr.Next = nil
+}
 
-// func rra(a *List) {
-// 	currH := a.Head
-// 	currT := a.Tail
-// 	a.Tail = currT.Prev
-// 	a.Tail.Next = nil
-// 	currT.Next = currH
-// 	a.Head = currT
-// }
+func rb(b *List) {
+	curr := b.Head
+	b.Tail.Next = curr
+	b.Tail = curr
+	b.Head = curr.Next
+	b.Tail.Next = nil
+}
 
-// func rrb(b *List) {
-// 	currH := b.Head
-// 	currT := b.Tail
-// 	b.Tail = currT.Prev
-// 	b.Tail.Next = nil
-// 	currT.Next = currH
-// 	b.Head = currT
-// }
+func rr(a, b *List) {
+	ra(a)
+	rb(b)
+}
 
-// func rrr(a, b *List) {
-// 	rra(a)
-// 	rrb(b)
-// }
+func rra(a *List) {
+	currH := a.Head
+	currT := a.Tail
+	a.Tail = currT.Prev
+	a.Tail.Next = nil
+	currT.Next = currH
+	a.Head = currT
+}
 
+func rrb(b *List) {
+	currH := b.Head
+	currT := b.Tail
+	b.Tail = currT.Prev
+	b.Tail.Next = nil
+	currT.Next = currH
+	b.Head = currT
+}
 
-
-// func IsSorted(l *List) bool {
-// 	curr := l.Head
-// 	for curr != nil {
-// 		if curr.N > curr.Next.N {
-// 			return false
-// 		}
-// 	}
-// 	return true
-// }
-
-// func printList(l *List) {
-// 	curr := l.Head
-// 	for curr != nil {
-// 		fmt.Printf("%v ->", curr.N)
-// 		curr = curr.Next
-// 	}
-// }
+func rrr(a, b *List) {
+	rra(a)
+	rrb(b)
+}
 
 
-// func parseArg(arg []string) (*List, error) {
-// 	l := &List{}
-// 	if len(arg) > 1 {
-// 		return nil, errors.New("ERROR")
-// 	}
+
+func IsSorted(l *List) bool {
+	curr := l.Head
+	for curr != nil {
+		if curr.N > curr.Next.N {
+			return false
+		}
+		curr = curr.Next
+	}
+	return true
+}
+
+func printList(l *List) {
+	curr := l.Head
+	for curr != nil {
+		fmt.Printf("%v ->", curr.N)
+		curr = curr.Next
+	}
+}
+
+
+func parseArg(arg []string) (*List, error) {
+	l := &List{}
+	if len(arg) > 1 {
+		return nil, errors.New("ERROR")
+	}
 	
 
-// 	lS:= strings.Split(arg[0], " ")
+	lS:= strings.Split(arg[0], " ")
 
-// 	// if err != nil {
-// 	// 	return nil, errors.New("ERROR")
-// 	// }
+	// if err != nil {
+	// 	return nil, errors.New("ERROR")
+	// }
 
-// 	for _, n := range lS {
-// 		x, _ := strconv.Atoi(n)
-// 		appendNode(x, l)
-// 	}
-// 	return l, nil
-// }
+	for _, n := range lS {
+		x, _ := strconv.Atoi(n)
+		appendNode(x, l)
+	}
+	return l, nil
+}
 
 
-// func appendNode(n int, l *List) *List  {
-// 	new := &Node{N: n}
-// 	curr := l.Head
-// 	if curr == nil {
-// 		l.Head = new
-// 		l.Tail = new
-// 		new.Next = nil
-// 		new.Prev = nil
-// 		return l
-// 	}
-// 	prev := l.Tail
-// 	l.Tail.Next = new
+func appendNode(n int, l *List) *List  {
+	new := &Node{N: n}
+	curr := l.Head
+	if curr == nil {
+		l.Head = new
+		l.Tail = new
+		new.Next = nil
+		new.Prev = nil
+		return l
+	}
+	prev := l.Tail
+	l.Tail.Next = new
 
-// 	l.Tail = new
-// 	l.Tail.Prev = prev
-// 	return l
-// }
+	l.Tail = new
+	l.Tail.Prev = prev
+	return l
+}
 
 
