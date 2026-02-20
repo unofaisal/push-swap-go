@@ -21,66 +21,43 @@ func Push_swap(args []string) {
     a, _ := parseArg(args)
     b := &List{}
     set_current_position(a)
-    fmt.Print("CURRENT A: ")
-    printList(a)
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++1")
-
-    
+    pb(a, b)
+    printList(b)
     for size(a) > 3 {
         pb(a, b)
     }
-    fmt.Print("CURRENT A: ")
-    printList(a)
-    fmt.Println()
-    fmt.Print("CURRENT B: ")
-    printList(b)
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++2")
-
     tinySort(a)
-    fmt.Print("CURRENT A: ")
-    printList(a)
-    fmt.Println()
-    fmt.Print("CURRENT B: ")
-    printList(b)
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++3")
-
-    // currb := b.Head
-    for b.Head != nil {
-        fmt.Print("\nxcluuuuuuuuuuuuuuuuuusive\n")
-        printList(b)
+    fmt.Println("\n COUNTE")
+        printList(a)
         fmt.Println()
-        fmt.Println(b.Head)
-        
+        printList(b)
+        fmt.Println("\n ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    // currb := b.Head
+    COUNTER := 0
+    for b.Head != nil {
         init_list(a, b)
         move_nodes(a, b)
+        fmt.Println("\n COUNTER: ", COUNTER)
+        printList(a)
+        fmt.Println()
+        printList(b)
+        fmt.Println("\n ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+        COUNTER++
     }
-    fmt.Print("CURRENT A: ")
-    printList(a)
-    fmt.Println()
-    fmt.Print("CURRENT b: ")
-    // printList(b)
-    fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++4")
-
     set_current_position(a)
-    // min := min(a)
-    // curr := a.Head
     if min(a).above_median {
         fmt.Print(a.Head == min(a))
         for a.Head != min(a) {
             ra(a)
         }
     } else {
+        fmt.Print(a.Head != min(a))
         for a.Head != min(a) {
             rra(a)
         }
     }
-    // fmt.Print("CURRENT A: ")
-    // printList(a)
-    // fmt.Println()
-    // fmt.Print("CURRENT b: ")
-    // printList(a)
-    // fmt.Println("++++++++++++++++++++++++++++++++++++++++++++++++")
-    
+    fmt.Println()
+    printList(a)
 }
 
 
@@ -95,7 +72,6 @@ func move_nodes(target_list, list *List) {
     if !(cheapest.above_median) && !(cheapest.target_node.above_median) {
         reverse_rotate_both(target_list, list, cheapest)
     }
-    printList(target_list)
     cheapest = get_cheapest(list)
     finish_rotation(target_list, cheapest.target_node, "a")
     finish_rotation(list, cheapest, "b")
@@ -107,11 +83,6 @@ func move_nodes(target_list, list *List) {
 func finish_rotation(l *List, cheapest *Node, a_or_b string) {
     // curr := l.Head
     for l.Head != cheapest {
-        fmt.Println("\ncurr")
-        fmt.Println("head: ", l.Head,  "cheap: ", cheapest)
-        printList(l)
-        fmt.Println()
-
         if a_or_b == "a" {
             if cheapest.above_median {
                 ra(l)
@@ -125,36 +96,17 @@ func finish_rotation(l *List, cheapest *Node, a_or_b string) {
                 rrb(l)
             }
         }
-        printList(l)
     }
 }
 
 func rotate_both(target_list, list *List, cheapest *Node) {
-    // curr := list.Head
-    // currT := target_list.Head
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++rotstart")
-     fmt.Println("\n before rotatate both")
-    fmt.Print("CURRENT A: ")
-    printList(target_list)
-    fmt.Println()
-    fmt.Print("CURRENT B: ")
-    printList(list)
     
     for list.Head != cheapest && target_list.Head != cheapest.target_node  {
-        fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++rotweiler")
-        fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++rotweiler")
-        rr(target_list, list)
+          rr(target_list, list)
     }
     set_current_position(target_list)
     set_current_position(list)
-    fmt.Println("\n rotatate both")
-    fmt.Print("CURRENT A: ")
-    printList(target_list)
-    fmt.Println()
-    fmt.Print("CURRENT B: ")
-    printList(list)
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++rotend")
-}
+    }
 
 func reverse_rotate_both(target_list, list *List, cheapest *Node) {
     curr := list.Head
@@ -164,13 +116,6 @@ func reverse_rotate_both(target_list, list *List, cheapest *Node) {
     }
     set_current_position(target_list)
     set_current_position(list)
-    fmt.Println("\n reverse rotatate both")
-    fmt.Print("CURRENT A: ")
-    printList(target_list)
-    fmt.Println()
-    fmt.Print("CURRENT B: ")
-    printList(list)
-    fmt.Println("\n++++++++++++++++++++++++++++++++++++++++++++++++3")
 }
 func init_list(target_list, list *List) {
     set_current_position(target_list)
@@ -292,7 +237,7 @@ func max(l *List) *Node {
 
 func min(l *List) *Node {
     curr := l.Head
-    var min *Node
+    min := l.Head
     for curr != nil {
         if min.N > curr.N {
             min = curr
