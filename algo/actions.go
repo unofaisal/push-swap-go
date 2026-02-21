@@ -1,118 +1,96 @@
 package algo
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
 
 func pb(a, b *List) {
-	curra := a.Head
-	currb := b.Head
 
-
-	a.Head = curra.Next
-	a.Head.Prev = nil
-
-	
-
-	if currb == nil {
-		b.Head = curra
-		b.Tail = curra
-		b.Head.Prev = nil
-		b.Head.Next = nil
+	if a.Head == nil {
+		return
+	}
+	node := a.Head
+	a.Head = node.Next
+	if a.Head != nil {
+		a.Head.Prev = nil
 	} else {
-		curra.Next = currb
-		currb.Prev = curra
-		b.Head = curra
-		b.Head.Prev = nil
+		a.Tail = nil
 	}
 
-	// a0Data := curra.N
-	// b0NNode := &Node{N:a0Data, Next:currb}
-	
-	// b.Head = b0NNode
-	// if currb == nil {
-	// 	a.Head = curra.Next
-	// 	b.Tail = b0NNode
-	// 	b.Head.Next = nil
-	// 	b.Head.Prev = nil
-	// } else {
-	// 	a.Head = curra.Next
-	// 	currb.Prev = b.Head
-	// 	b.Head.Next = currb
-	// 	b.Head.Prev = nil
-	// }
+	node.Next = b.Head
+	node.Prev = nil
+	if b.Head != nil {
+		b.Head.Prev = node
+	} else {
+		b.Tail = node
+	}
+	b.Head = node
+	fmt.Print("pb\n")
 }
 
 func pa(a, b *List) {
-	curra := a.Head
-	currb := b.Head
 
-	b.Head = currb.Next
-	
-	
-	
-	if curra == nil {
-		a.Head = currb
-		a.Tail = currb
-		a.Head.Prev = nil
-		b.Head.Next = nil
+	if b.Head == nil {
+		return
+	}
+	node := b.Head
+	b.Head = node.Next
+	if b.Head != nil {
+		b.Head.Prev = nil
 	} else {
-		a.Head = currb
-		curra.Prev = currb
-		a.Head.Next = curra
-		a.Head.Prev = nil
+		b.Tail = nil
 	}
 
-	// b0Data := currb.N
-	// a0NNode := &Node{N:b0Data, Next:curra}
-	
-	// a.Head = a0NNode
-	// if curra == nil {
-	// 	b.Head = currb.Next
-	// 	a.Tail = a0NNode
-	// 	a.Head.Next = nil
-	// 	a.Head.Prev = nil
-	// } else {
-	// 	b.Head = currb.Next
-	// 	curra.Prev = a.Head
-	// 	a.Head.Next = curra
-	// 	a.Head.Prev = nil
-	// }
+	node.Next = a.Head
+	node.Prev = nil
+	if a.Head != nil {
+		a.Head.Prev = node
+	} else {
+		a.Tail = node
+	}
+	a.Head = node
+	fmt.Print("pa\n")
+}
+
+func swap(a *List) {
+	if a.Head == nil || a.Head.Next == nil {
+		return
+	}
+	curr := a.Head
+	next := curr.Next
+
+	curr.Next = next.Next
+	if next.Next != nil {
+		next.Next.Prev = curr
+	} else {
+		a.Tail = curr
+	}
+	next.Prev = nil
+	next.Next = curr
+	curr.Prev = next
+	a.Head = next
 }
 
 func sa(a *List) {
-	curr := a.Head
-	next := curr.Next
-	if curr == nil || curr.Next == nil {
-		return
-	}
-	curr.Next = next.Next
-	next.Next = curr
-	a.Head = next
-	
+	swap(a)
+	fmt.Print("sa\n")
 }
 
 func sb(b *List) {
-	curr := b.Head
-	next := curr.Next
-	if curr == nil || curr.Next == nil {
-		return
-	}
-	curr.Next = next.Next
-	next.Next = curr
-	b.Head = next
-	
+	swap(b)
+	fmt.Print("sb\n")
 }
 
 func ss(a, b *List) {
-	sa(a)
-	sb(b)
+	swap(a)
+	swap(b)
+	fmt.Print("ss\n")
 }
 
-func ra(a *List) {
+func rotate(a *List) {
 	curr := a.Head
 	currT := a.Tail
 
@@ -123,88 +101,49 @@ func ra(a *List) {
 	a.Tail.Next = curr
 	a.Tail = curr
 	a.Tail.Next = nil
-
-	// a0Data := curr.N
-	// a.Head = curr.Next
-	
-	// aTNode := &Node{N: a0Data, Next: nil, Prev: currT}
-	// a.Tail.Next = aTNode
-	// a.Tail = aTNode
-	// a.Tail.Next = nil
-	
+}
+func ra(a *List) {
+	rotate(a)
+	fmt.Print("ra\n")
 }
 
 func rb(b *List) {
-
-	curr := b.Head
-	currT := b.Tail
-
-	b.Head = curr.Next
-	b.Head.Prev = nil
-	curr.Next = nil
-	curr.Prev = currT
-	b.Tail.Next = curr
-	b.Tail = curr
-	b.Tail.Next = nil
-
-	// curr := b.Head
-	// currT := b.Tail
-	// b0Data := curr.N
-	// b.Head = curr.Next
-	
-	// bTNode := &Node{N: b0Data, Next: nil, Prev: currT}
-	// b.Tail.Next = bTNode
-	// b.Tail = bTNode
-	// b.Tail.Next = nil
+	rotate(b)
+	fmt.Print("rb\n")
 }
 
 func rr(a, b *List) {
-	ra(a)
-	rb(b)
+	rotate(a)
+	rotate(b)
+	fmt.Print("rr\n")
 }
 
-func rra(a *List) {
+func reverse_rotate(a *List) {
 	currH := a.Head
 	currT := a.Tail
-	// aTData := currT.N
-	// aTNNode := &Node{N:aTData, Next:currH}
-	// a.Head = aTNNode
-	// fmt.Println("hellloooo: ", currT.Prev)
-	// fmt.Println("hellloooo: ", currT)
-	// a.Tail = currT.Prev
-	// a.Tail.Next = nil
-
 	a.Tail = currT.Prev
 	a.Tail.Next = nil
 	a.Head.Prev = currT
 	a.Head = currT
 	a.Head.Next = currH
 	a.Head.Prev = nil
-	
+}
+
+func rra(a *List) {
+	reverse_rotate(a)
+	fmt.Print("rra\n")
+
 }
 
 func rrb(b *List) {
-	currH := b.Head
-	currT := b.Tail
-	// bTData := currT.N
-	// bTNNode := &Node{N:bTData, Next:currH}
-	
-	// // fmt.Println("hellloooo: ", currT.Prev)
-	// b.Tail = currT.Prev
-	// b.Tail.Next = nil
-	// b.Head = bTNNode
-
-	b.Tail = currT.Prev
-	b.Tail.Next = nil
-	b.Head.Prev = currT
-	b.Head = currT
-	b.Head.Next = currH
-	b.Head.Prev = nil
+	reverse_rotate(b)
+	fmt.Print("rrb\n")
 }
 
 func rrr(a, b *List) {
-	rra(a)
-	rrb(b)
+	reverse_rotate(a)
+	reverse_rotate(b)
+	fmt.Print("rrr\n")
 }
 
 func printList(l *List) {
@@ -215,15 +154,13 @@ func printList(l *List) {
 	}
 }
 
-
 func parseArg(arg []string) (*List, error) {
 	l := &List{}
 	if len(arg) > 1 {
 		return nil, errors.New("ERROR")
 	}
-	
 
-	lS:= strings.Split(arg[0], " ")
+	lS := strings.Split(arg[0], " ")
 
 	// if err != nil {
 	// 	return nil, errors.New("ERROR")
@@ -236,8 +173,7 @@ func parseArg(arg []string) (*List, error) {
 	return l, nil
 }
 
-
-func appendNode(n int, l *List) *List  {
+func appendNode(n int, l *List) *List {
 	new := &Node{N: n}
 	curr := l.Head
 	if curr == nil {
@@ -254,5 +190,3 @@ func appendNode(n int, l *List) *List  {
 	l.Tail.Prev = prev
 	return l
 }
-
-
