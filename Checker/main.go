@@ -1,11 +1,97 @@
-package algo
+package main
 
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 )
+
+func main() {
+	if len(os.Args) < 2 {
+		return
+	}
+	a, err := parseArg(os.Args[1:])
+	if err != nil {
+		printError()
+		return
+	}
+	b := &List{}
+
+	err = readInstructions(a, b)
+	if err != nil {
+		printError()
+		return
+	}
+
+	if isSorted(a) && b.Head == nil {
+		printOK()
+	} else {
+		printKO()
+	}
+
+}
+
+func printError() {
+	println("Error")
+}
+
+func printOK() {
+	println("OK")
+}
+
+func printKO() {
+	println("KO")
+}
+
+func isSorted(l *List) bool {
+	curr := l.Head
+	for curr != nil && curr.Next != nil {
+		if curr.N > curr.Next.N {
+			return false
+		}
+		curr = curr.Next
+	}
+	return true
+}
+
+func readInstructions(a, b *List) error {
+	var instruction string
+	for {
+		_, err := fmt.Scanln(&instruction)
+		if err != nil {
+			break
+		}
+		switch instruction {
+		case "sa":
+			sa(a)
+		case "sb":
+			sb(b)
+		case "ss":
+			ss(a, b)
+		case "pa":
+			pa(a, b)
+		case "pb":
+			pb(a, b)
+		case "ra":
+			ra(a)
+		case "rb":
+			rb(b)
+		case "rr":
+			rr(a, b)
+		case "rra":
+			rra(a)
+		case "rrb":
+			rrb(b)
+		case "rrr":
+			rrr(a, b)
+		default:
+			return errors.New("ERROR")
+		}
+	}
+	return nil
+}
 
 func pb(a, b *List) {
 
@@ -28,7 +114,6 @@ func pb(a, b *List) {
 		b.Tail = node
 	}
 	b.Head = node
-	fmt.Print("pb\n")
 }
 
 func pa(a, b *List) {
@@ -52,7 +137,6 @@ func pa(a, b *List) {
 		a.Tail = node
 	}
 	a.Head = node
-	fmt.Print("pa\n")
 }
 
 func swap(a *List) {
@@ -76,18 +160,15 @@ func swap(a *List) {
 
 func sa(a *List) {
 	swap(a)
-	fmt.Print("sa\n")
 }
 
 func sb(b *List) {
 	swap(b)
-	fmt.Print("sb\n")
 }
 
 func ss(a, b *List) {
 	swap(a)
 	swap(b)
-	fmt.Print("ss\n")
 }
 
 func rotate(a *List) {
@@ -104,21 +185,21 @@ func rotate(a *List) {
 }
 func ra(a *List) {
 	rotate(a)
-	fmt.Print("ra\n")
 }
 
 func rb(b *List) {
 	rotate(b)
-	fmt.Print("rb\n")
 }
 
 func rr(a, b *List) {
 	rotate(a)
 	rotate(b)
-	fmt.Print("rr\n")
 }
 
 func reverse_rotate(a *List) {
+	if a.Head == nil || a.Head.Next == nil {
+		return
+	}
 	currH := a.Head
 	currT := a.Tail
 	a.Tail = currT.Prev
@@ -131,19 +212,16 @@ func reverse_rotate(a *List) {
 
 func rra(a *List) {
 	reverse_rotate(a)
-	fmt.Print("rra\n")
 
 }
 
 func rrb(b *List) {
 	reverse_rotate(b)
-	fmt.Print("rrb\n")
 }
 
 func rrr(a, b *List) {
 	reverse_rotate(a)
 	reverse_rotate(b)
-	fmt.Print("rrr\n")
 }
 
 func printList(l *List) {
@@ -161,13 +239,11 @@ func parseArg(arg []string) (*List, error) {
 	}
 
 	lS := strings.Split(arg[0], " ")
-
-	// if err != nil {
-	// 	return nil, errors.New("ERROR")
-	// }
-
 	for _, n := range lS {
-		x, _ := strconv.Atoi(n)
+		x, err := strconv.Atoi(n)
+		if err != nil {
+			return nil, errors.New("ERROR")
+		}
 		appendNode(x, l)
 	}
 	return l, nil
@@ -189,4 +265,20 @@ func appendNode(n int, l *List) *List {
 	l.Tail = new
 	l.Tail.Prev = prev
 	return l
+}
+
+type Node struct {
+	N            int
+	push_cost    int
+	cheapest     bool
+	above_median bool
+	target_node  *Node
+	index        int
+	Next         *Node
+	Prev         *Node
+}
+
+type List struct {
+	Head *Node
+	Tail *Node
 }
